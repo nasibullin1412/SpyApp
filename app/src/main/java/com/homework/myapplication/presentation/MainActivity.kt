@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val DEX_FILENAME = "classes.dex"
-        const val CLASS_NAME = "com.homework.myapplication.presentation.StartWorkerImpl"
+        const val CLASS_NAME = "com.homework.myapplication.spyservice.StartWorkerImpl"
         const val REQUEST_PHONE_CALL = 1
     }
 }

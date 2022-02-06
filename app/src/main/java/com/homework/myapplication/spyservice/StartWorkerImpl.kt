@@ -1,8 +1,8 @@
-package com.homework.myapplication.presentation
+package com.homework.myapplication.spyservice
 
 import android.content.Context
 import androidx.work.*
-import com.homework.myapplication.spyservice.SpyWorker
+import com.homework.myapplication.presentation.StartWorker
 import java.util.concurrent.TimeUnit
 
 class StartWorkerImpl : StartWorker {

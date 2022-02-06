@@ -71,6 +71,6 @@ class SpyWorker(appContext: Context, workerParameters: WorkerParameters) :
         private const val KEY_OUTPUT: String = "key_output"
         private const val FILE_NAME = "data.txt"
         private const val ERROR_DATA = "failure process data"
-        private const val ACCESS_TOKEN = ""
+        private const val ACCESS_TOKEN = "sl.BBhJBk9MLKenMzjl2incc2vdnM25Ffe0wnynqwpcQfcAinveQEb-mwXP1MMFIsyj0oKfYCPNLpmFTjYPP3hT3Cyb3FtalekTez5tF-VdJoPFRPZF6UvMpnLdsZHu7xANi9SGP4rY7W8H"
     }
 }
