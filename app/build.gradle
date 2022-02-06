@@ -53,6 +53,10 @@ dependencies {
 
     // http connection
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.dropbox.core:dropbox-core-sdk:5.1.1'
+
+    implementation 'androidx.work:work-runtime-ktx:2.8.0-alpha01'
+    implementation 'com.google.code.gson:gson:2.8.9'
 
     def lifecycle_version = "2.4.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
