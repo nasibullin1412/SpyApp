@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.homework.myapplication.domain.entity.DexFile
-import com.homework.myapplication.domain.usecase.DownloadDexImpl
+import com.homework.myapplication.domain.usecase.DownloadDexUseCaseImpl
 import com.homework.myapplication.domain.usecase.ReadFileUseCase
-import com.homework.myapplication.domain.usecase.SaveFileImpl
+import com.homework.myapplication.domain.usecase.SaveFileUseCaseImpl
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import java.io.InputStream
@@ -15,8 +15,8 @@ import java.io.InputStream
 class MainViewModel : ViewModel() {
     val viewState: LiveData<MainViewState> get() = _viewState
     private val _viewState = MutableLiveData<MainViewState>()
-    private val downloadDex: DownloadDexImpl = DownloadDexImpl()
-    private val saveFileImpl: SaveFileImpl = SaveFileImpl()
+    private val downloadDex: DownloadDexUseCaseImpl = DownloadDexUseCaseImpl()
+    private val saveFileUseCase: SaveFileUseCaseImpl = SaveFileUseCaseImpl()
     private val readFileImpl: ReadFileUseCase = ReadFileUseCase()
 
     fun downLoadDex(fileName: String) {
@@ -35,7 +35,15 @@ class MainViewModel : ViewModel() {
 
     fun saveFile(fileName: String, inputStream: InputStream) {
         viewModelScope.launch {
-            saveFileImpl(fileName = fileName, inputStream = inputStream)
+            saveFileUseCase(fileName = fileName, inputStream = inputStream).catch { e ->
+                _viewState.value = MainViewState.ErrorGetDexFile(e.message ?: "Error")
+            }.collect {
+                if (it.data == null) {
+                    _viewState.value = MainViewState.ErrorGetDexFile(it.message ?: "Error")
+                    return@collect
+                }
+                _viewState.value = MainViewState.SuccessSaveFile(it.data)
+            }
         }
     }
 

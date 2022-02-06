@@ -7,7 +7,7 @@ import com.homework.myapplication.domain.repository.Resource
 import kotlinx.coroutines.flow.Flow
 import java.io.InputStream
 
-class DownloadDexImpl {
+class DownloadDexUseCaseImpl {
     private val dexRepository: DexRepository = DexRepositoryImpl()
 
     suspend operator fun invoke(dexFile: DexFile): Flow<Resource<InputStream>> {

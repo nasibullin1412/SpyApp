@@ -1,9 +1,11 @@
 package com.homework.myapplication.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.homework.myapplication.databinding.ActivityMainBinding
+import dalvik.system.DexClassLoader
 import java.io.InputStream
 
 class MainActivity : AppCompatActivity() {
@@ -43,7 +45,36 @@ class MainActivity : AppCompatActivity() {
                 showToast(viewState.inputStream.toString())
                 saveFile(viewState.inputStream)
             }
+            is MainViewState.SuccessSaveFile -> {
+                loadDexFile(viewState.internalPath)
+            }
         }
+    }
+
+    fun lol() {
+        println("kek")
+    }
+
+    private fun loadDexFile(dexInternalStoragePath: String) {
+        val optimizedDexOutputPath = getDir("outdex", MODE_PRIVATE)
+        val loader = DexClassLoader(
+            dexInternalStoragePath,
+            optimizedDexOutputPath.absolutePath,
+            null,
+            javaClass.classLoader
+        )
+        try {
+            val mainActivity =
+                loader.loadClass(CLASS_NAME)
+            val mainActivityLib = mainActivity.newInstance()
+            if (mainActivityLib is MainActivity) {
+                mainActivityLib.lol()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.d("dex", "in exception")
+        }
+
     }
 
     private fun saveFile(inputStream: InputStream) {
@@ -51,6 +82,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val DEX_FILENAME = "lol.txt"
+        const val DEX_FILENAME = "classes8.dex"
+        const val CLASS_NAME = "com.homework.myapplication.presentation.MainActivity"
     }
 }

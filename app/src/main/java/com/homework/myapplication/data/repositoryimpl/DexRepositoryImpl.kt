@@ -11,7 +11,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.withContext
+import java.io.BufferedOutputStream
+import java.io.FileOutputStream
 import java.io.InputStream
 
 class DexRepositoryImpl : BaseDataSource(), DexRepository {
@@ -25,13 +26,18 @@ class DexRepositoryImpl : BaseDataSource(), DexRepository {
     }.flowOn(Dispatchers.IO)
 
     @Suppress("BlockingMethodInNonBlockingContext")
-    override suspend fun saveFile(dexFile: DexFile): Unit =
-        withContext(Dispatchers.IO) {
-            App.instance.applicationContext.openFileOutput(dexFile.name, Context.MODE_PRIVATE)
-                .use { outputStream ->
-                    outputStream.write(dexFile.content.readBytes())
-                }
-        }
+    override suspend fun saveFile(dexFile: DexFile): Flow<Resource<String>> = flow {
+        val dexInternalStoragePath = java.io.File(
+            App.appContext.getDir("dex", Context.MODE_PRIVATE),
+            dexFile.name
+        )
+        val dexWriter = BufferedOutputStream(
+            FileOutputStream(dexInternalStoragePath)
+        )
+        dexWriter.write(dexFile.content.readBytes())
+        dexWriter.close()
+        emit(Resource.success(dexInternalStoragePath.absolutePath))
+    }.flowOn(Dispatchers.IO)
 
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun readFile(dexFile: DexFile): Flow<Resource<InputStream>> = flow {
