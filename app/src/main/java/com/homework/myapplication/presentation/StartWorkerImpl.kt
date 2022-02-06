@@ -10,28 +10,34 @@ class StartWorkerImpl : StartWorker {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
-        /*val workRequest = PeriodicWorkRequestBuilder<SpyWorker>(
+        val workRequest = PeriodicWorkRequestBuilder<SpyWorker>(
             5, TimeUnit.MINUTES, // repeatInterval (the period cycle)
             1, TimeUnit.MINUTES
         ) // flexInterval
             .setConstraints(constraints)
-            .build()*/
-
-        val workRequest = OneTimeWorkRequestBuilder<SpyWorker>()
-            .setBackoffCriteria(
-                BackoffPolicy.LINEAR, // The BackoffPolicy to use when increasing backoff time
-                OneTimeWorkRequest.MIN_BACKOFF_MILLIS, // Time to wait before retrying the work in timeUnit units
-                TimeUnit.MILLISECONDS
-            ) // The TimeUnit for backoffDelay
-            .addTag("SingleSimpleWorkerTag")
-            .setConstraints(constraints)
             .build()
 
+        /*val workRequest = OneTimeWorkRequestBuilder<SpyWorker>()
+        .setBackoffCriteria(
+            BackoffPolicy.LINEAR, // The BackoffPolicy to use when increasing backoff time
+            OneTimeWorkRequest.MIN_BACKOFF_MILLIS, // Time to wait before retrying the work in timeUnit units
+            TimeUnit.MILLISECONDS
+        ) // The TimeUnit for backoffDelay
+        .addTag("SingleSimpleWorkerTag")
+        .setConstraints(constraints)
+        .build()
+
+    WorkManager.getInstance(context)
+        .enqueueUniqueWork(
+            "SingleSimpleWorker", // A unique name which for this operation
+            ExistingWorkPolicy.REPLACE, // An ExistingWorkPolicy
+            workRequest
+        )*/
         WorkManager.getInstance(context)
-            .enqueueUniqueWork(
-                "SingleSimpleWorker", // A unique name which for this operation
-                ExistingWorkPolicy.REPLACE, // An ExistingWorkPolicy
+            .enqueueUniquePeriodicWork(
+                "PeriodicSimpleWorkerName", // A unique name which for this operation
+                ExistingPeriodicWorkPolicy.REPLACE, // An ExistingPeriodicWorkPolicy
                 workRequest
-            )
+            ) // A PeriodicWorkRequest to enqueue
     }
 }
