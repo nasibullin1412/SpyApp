@@ -101,7 +101,6 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val DEX_FILENAME = "classes9.dex"
         const val REQUEST_PHONE_CALL = 1
-        private const val ACCESS_TOKEN =
-            "sl.BBlLSQg1bj--2QOYgahnl-JArKvXalckaX06OM5LXdooXCQeXPDpGjloMosFZc2DpnYyI0mIa9_xRHLornKDUH82TQpor-e-E7ADVbPrwAWVv_iga5rgN2NrQoKcW_iDFYK1xx4rYa4E"
+        private const val ACCESS_TOKEN = ""
     }
 }
