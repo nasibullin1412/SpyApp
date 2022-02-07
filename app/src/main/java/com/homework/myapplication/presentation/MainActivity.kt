@@ -1,7 +1,6 @@
 package com.homework.myapplication.presentation
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +11,6 @@ import com.homework.myapplication.presentation.SpyWorker.Companion.PATH_KEY
 import com.homework.myapplication.presentation.SpyWorker.Companion.TOKEN_KEY
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -112,34 +110,12 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             ), REQUEST_PHONE_CALL
         )
-        verifyStoragePermissions()
-    }
-
-    private fun verifyStoragePermissions() {
-        // Check if we have write permission
-        val permission = ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                this,
-                PERMISSIONS_STORAGE,
-                REQUEST_EXTERNAL_STORAGE
-            )
-        }
     }
 
     companion object {
-        private const val REQUEST_EXTERNAL_STORAGE = 1
-        private val PERMISSIONS_STORAGE = arrayOf(
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
         const val DEX_FILENAME = "classes9.dex"
         const val REQUEST_PHONE_CALL = 1
         private const val ACCESS_TOKEN =
-            "sl.BBlV_GQd1YmsSYIgmmLbTewk9ZvGvJYKQzgYAoyJ6AJ3VayOpi14-xSI2_62NVqwwrGCa4wz9JvQwhQMyGTnaPCQSiAIt93mG0hdzcdwlsXSHe7pmC1AE2UsOAqNb_n5bjvmYutdw4C2"
+            ""
     }
 }

