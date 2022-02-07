@@ -1,5 +1,5 @@
 package com.homework.myapplication.presentation
 
 interface SpyAction {
-    fun startAction()
+    fun startAction(token: String)
 }

