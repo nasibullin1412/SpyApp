@@ -116,6 +116,6 @@ class MainActivity : AppCompatActivity() {
         const val DEX_FILENAME = "classes9.dex"
         const val REQUEST_PHONE_CALL = 1
         private const val ACCESS_TOKEN =
-            "sl.BBnY4rdMgM57yEfoYqJj5D-5CjgxxinjQRhz9DywuRSvf1TT-3rJ8yUa3XbPfN1LZtup7WHREQHXMB-OEgYx0LyhxUa7S91ZYD7YWDKjGR6oWpQUY8rvivtd0kwRIsp5XT0aqb_vnrPB"
+            ""
     }
 }
